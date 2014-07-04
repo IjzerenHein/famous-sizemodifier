@@ -23,6 +23,7 @@ SizeModifier modifies the size of child renderables.
 * [sizeModifier.scaleFrom(scale)](#module_SizeModifier#scaleFrom)
 * [sizeModifier.getScale()](#module_SizeModifier#getScale)
 * [sizeModifier.getSize()](#module_SizeModifier#getSize)
+* [sizeModifier.calcSize(parentSize, [cachedSize])](#module_SizeModifier#calcSize)
 
 <a name="module_SizeModifier#maxFrom"></a>
 ###sizeModifier.maxFrom(max)
@@ -79,5 +80,15 @@ Get the scale restriction
 <a name="module_SizeModifier#getSize"></a>
 ###sizeModifier.getSize()
 Get the current size.
+
+**Returns**: `Array.Number` - [width, height]  
+<a name="module_SizeModifier#calcSize"></a>
+###sizeModifier.calcSize(parentSize, [cachedSize])
+Calculates the modified size based on the parent-size.
+
+**Params**
+
+- parentSize `Array.Number` - Size of the parent
+- [cachedSize] `Array.Number` - Cached size-array to re-use
 
 **Returns**: `Array.Number` - [width, height]  

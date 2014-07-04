@@ -188,41 +188,45 @@ define(function (require, exports, module) {
     };
     
     /**
-     * Calculates the restricted size based on the parent-size
-     * @private
-     * @ignore
+     * Calculates the modified size based on the parent-size.
+     *
+     * @param {Array.Number} parentSize Size of the parent
+     * @param {Array.Number} [cachedSize] Cached size-array to re-use
+     * @return {Array.Number} [width, height]
      */
-    SizeModifier.prototype._updateSize = function () {
+    SizeModifier.prototype.calcSize = function (parentSize, cachedSize) {
+
+        // Get options
+        var scale = this._scaleGetter ? this._scaleGetter() : this._scale;
+        var max = this._maxGetter ? this._maxGetter() : this._max;
+        var min = this._minGetter ? this._minGetter() : this._min;
+        var ratio = this._ratioGetter ? this._ratioGetter() : this._ratio;
+        if (!scale && !max && !min && !ratio) { return null; }
                 
-        // prepare
-        if (!this._output[1].size) { this._output[1].size = [0, 0]; }
-        var size = this._output[1].size;
-        size[0] = this._parentSize[0];
-        size[1] = this._parentSize[1];
+        // init
+        var size = cachedSize || [0, 0];
+        size[0] = parentSize[0];
+        size[1] = parentSize[1];
         
         // apply scale
-        var scale = this._scaleGetter ? this._scaleGetter() : this._scale;
         if (scale) {
             size[0] = size[0] * (scale[0] !== undefined) ? scale[0] : 1;
             size[1] = size[1] * (scale[1] !== undefined) ? scale[1] : 1;
         }
         
         // apply max
-        var max = this._maxGetter ? this._maxGetter() : this._max;
         if (max) {
             size[0] = Math.min(size[0], max[0] !== undefined ? max[0] : size[0]);
             size[1] = Math.min(size[1], max[1] !== undefined ? max[1] : size[1]);
         }
         
         // apply min
-        var min = this._minGetter ? this._minGetter() : this._min;
         if (min) {
             size[0] = Math.max(size[0], min[0] !== undefined ? min[0] : size[0]);
             size[1] = Math.max(size[1], min[1] !== undefined ? min[1] : size[1]);
         }
     
         // apply ratio
-        var ratio = this._ratioGetter ? this._ratioGetter() : this._ratio;
         if (ratio) {
             if (ratio < (size[0] / size[1])) {
                 size[0] = size[1] * ratio;
@@ -230,6 +234,8 @@ define(function (require, exports, module) {
                 size[1] = size[0] / ratio;
             }
         }
+        
+        return size;
     };
     
     /**
@@ -248,7 +254,7 @@ define(function (require, exports, module) {
             this._parentSize[0] = context.size[0];
             this._parentSize[1] = context.size[1];
         }
-        this._updateSize();
+        this._output[1].size = this.calcSize(this._parentSize, this._output[1].size);
     };
     
     /**
