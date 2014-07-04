@@ -35,15 +35,16 @@ define(function (require, exports, module) {
 
     // import dependencies
     var Entity = require('famous/core/Entity');
-    var Transform = require('famous/core/Transform');
-    var RenderNode = require('famous/core/RenderNode');
 
     /**
-     * SizeModifier restricts the size based on: maximum, minumum and aspect-ratio
+     * SizeModifier modifies the size of child renderables.
      *
      * @class 
      * @param {Object} options Options.
-     * @param {Array.Number|Function|Object} [options.size] .
+     * @param {Array.Number|Function|Object} [options.scale] Scale
+     * @param {Array.Number|Function|Object} [options.min] Minimum-size
+     * @param {Array.Number|Function|Object} [options.max] Maximum-size
+     * @param {Number|Function|Object} [options.ratio] Aspect-ratio
      * @alias module:SizeModifier
      */
     var SizeModifier = function (options) {
@@ -58,12 +59,13 @@ define(function (require, exports, module) {
         if (options.min) { this.minFrom(options.min); }
         if (options.max) { this.maxFrom(options.max); }
         if (options.ratio) { this.ratioFrom(options.ratio); }
+        if (options.scale) { this.ratioFrom(options.scale); }
     };
 
     /**
-     * Set the maximum-size restriction
+     * Set the maximum-size.
      *
-     * @param {Array.Number|Function|Object} size Size.
+     * @param {Array.Number|Function|Object} max Maximum-size
      */
     SizeModifier.prototype.maxFrom = function (max) {
         if (!max) {
@@ -81,18 +83,18 @@ define(function (require, exports, module) {
     };
     
     /**
-     * Get the maximum-size restriction
+     * Get the maximum-size
      *
-     * @return {Array.Number} Size
+     * @return {Array.Number|Function|Object} Maximum-size
      */
     SizeModifier.prototype.getMax = function () {
         return this._maxGetter || this._max;
     };
     
     /**
-     * Set the minimum-size restriction
+     * Set the minimum-size.
      *
-     * @param {Array.Number|Function|Object} size Size.
+     * @param {Array.Number|Function|Object} min Minimum-size.
      */
     SizeModifier.prototype.minFrom = function (min) {
         if (!min) {
@@ -110,18 +112,18 @@ define(function (require, exports, module) {
     };
     
     /**
-     * Get the minimum-size restriction
+     * Get the minimum-size.
      *
-     * @return {Array.Number} Size
+     * @return {Array.Number|Function|Object} Minimum-size
      */
     SizeModifier.prototype.getMin = function () {
         return this._minGetter || this._min;
     };
     
     /**
-     * Set the ratio restriction
+     * Set the aspect-ratio (e.g. 4/3))
      *
-     * @param {Array.Number|Function|Object} ratio.
+     * @param {Number|Function|Object} ratio Aspect-ratio
      */
     SizeModifier.prototype.ratioFrom = function (ratio) {
         if (!ratio) {
@@ -139,26 +141,56 @@ define(function (require, exports, module) {
     };
     
     /**
-     * Get the ratio restriction
+     * Get the aspect-ratio.
      *
-     * @return {Array.Number} Size
+     * @return {Number|Function|Object} Aspect-ratio
      */
     SizeModifier.prototype.getRatio = function () {
         return this._ratioGetter || this._ratio;
     };
 
     /**
-     * Return size of contained element.
+     * Set the scale (e.g. [0.5, 0.5])
      *
-     * @method getSize
+     * @param {Array.Number|Function|Object} scale Scale.
+     */
+    SizeModifier.prototype.scaleFrom = function (scale) {
+        if (!scale) {
+            this._scaleGetter = null;
+            this._scale = null;
+        } else if (scale instanceof Function) {
+            this._scaleGetter = scale;
+        } else if (scale instanceof Object && scale.getRatio) {
+            this._scaleGetter = scale.getScale.bind(scale);
+        } else {
+            this._scaleGetter = null;
+            this._scale = scale;
+        }
+        return this;
+    };
+    
+    /**
+     * Get the scale restriction
+     *
+     * @return {Array.Number|Function|Object} Scale
+     */
+    SizeModifier.prototype.getScale = function () {
+        return this._scaleGetter || this._scale;
+    };
+    
+    /**
+     * Get the current size.
+     *
      * @return {Array.Number} [width, height]
      */
-    SizeModifier.prototype.getSize = function getSize() {
+    SizeModifier.prototype.getSize = function () {
         return this._output[1].size;
     };
     
     /**
      * Calculates the restricted size based on the parent-size
+     * @private
+     * @ignore
      */
     SizeModifier.prototype._updateSize = function () {
                 
@@ -167,6 +199,13 @@ define(function (require, exports, module) {
         var size = this._output[1].size;
         size[0] = this._parentSize[0];
         size[1] = this._parentSize[1];
+        
+        // apply scale
+        var scale = this._scaleGetter ? this._scaleGetter() : this._scale;
+        if (scale) {
+            size[0] = size[0] * (scale[0] !== undefined) ? scale[0] : 1;
+            size[1] = size[1] * (scale[1] !== undefined) ? scale[1] : 1;
+        }
         
         // apply max
         var max = this._maxGetter ? this._maxGetter() : this._max;
@@ -185,15 +224,20 @@ define(function (require, exports, module) {
         // apply ratio
         var ratio = this._ratioGetter ? this._ratioGetter() : this._ratio;
         if (ratio) {
-            // todo
+            if (ratio < (size[0] / size[1])) {
+                size[0] = size[1] * ratio;
+            } else {
+                size[1] = size[0] / ratio;
+            }
         }
     };
     
     /**
      * In commit we 'catch' the parent-size and calculate the size. It is then 
-    * used in the next render cycle.
+     * used in the next render cycle.
      *
      * @private
+     * @ignore
      * @method commit
      * @param {Context} context commit context
      */

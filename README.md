@@ -1,12 +1,19 @@
 famous-sizemodifier
 ==========
 
-Size-modifier sets the maximum-size, minimum-size and the aspect-ratio for renderables.
+SizeModifier modifies the size of renderables based on the following options:
+
+|Option|Description|
+|--------|-----------|
+|```scale```|Scales the size proportionally to the parent-size.
+|```min```|Sets the minimum-size.|
+|```max```|Sets the maximum-size.|
+|```ratio```|Aspect ratio to enforce.|
 
 ### Demos
 
-- [Site demo (demonstrates maximum-width to create a site-layout which shows as full-screen on mobile)](https://rawgit.com/IjzerenHein/famous-sizemodifier/master/examples/site/index.html)
-- [Photo demo (demonstrates aspect-ratio)](https://rawgit.com/IjzerenHein/famous-sizemodifier/master/examples/photo/index.html)
+- [Site demo](https://rawgit.com/IjzerenHein/famous-sizemodifier/master/examples/site/index.html) *(demonstrates maximum-width to create a site-layout with borders)*
+- [Photo demo](https://rawgit.com/IjzerenHein/famous-sizemodifier/master/examples/photo/index.html) *(demonstrates aspect-ratio)*
 
 ## Getting started
 
@@ -26,25 +33,51 @@ require.config({
 });
 ```
 
-Create a surface with a maximum-width of 400px.
+Create a surface with a maximum-width of 400px, and a minimum-height of 100px:
 
 ```javascript
 var SizeModifier = require('famous-sizemodifier');
 
 var sizeModifier = new SizeModifier({
-    max: [100, undefined]
+    max: [400, undefined],
+    min: [undefined, 100]
 });
-var surface = new Surface({
-    properties: {
-        backgroundColor: 'blue'
-    }
-});
+var surface = new Surface({ properties: { backgroundColor: 'blue' }});
 this.add(sizeModifier).add(surface);
 ```
 
-## Documentation
+Create a surface which is 50% its parent size:
 
-// TODO
+*Note: this is different from Transform.scale, as it does not apply a scale-matrix, but it merely changes the size.*
+
+```javascript
+var sizeModifier = new SizeModifier({
+    scale: [0.5, 0.5]
+});
+var surface = new Surface({ properties: { backgroundColor: 'blue' }});
+this.add(sizeModifier).add(surface);
+```
+
+Create a surface with an aspect ratio of 4/3:
+
+```javascript
+var sizeModifier = new SizeModifier({
+    ratio: 4/3
+});
+var surface = new Surface({ properties: { backgroundColor: 'blue' }});
+this.add(sizeModifier).add(surface);
+```
+
+## API Reference
+
+* [SizeModifier](docs/SizeModifier.md)
+
+## Known Isues
+
+Due to the way famo.us isolates modifiers and renderables, the size is modified one render-cycle later than would be expected. This is because of the way SizeModifier captures the size of the parent. In many cases this is not a problem, but when SizeModifier's are nested the delay accumulates and increases.
+
+*This is definitely a bug, for which there is currently no solution (as far as I am aware of).
+If you know of a solution, please let me know. - Hein*
 
 ## Contribute
 

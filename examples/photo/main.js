@@ -53,7 +53,7 @@ define(function (require, exports, module) {
     });
     var sizeModifier = new SizeModifier({
         max: [600, 400],
-        ratio: [4, 3]
+        ratio: 4/3
     });
     var frame = new Surface({
         classes: ['photo-frame']
