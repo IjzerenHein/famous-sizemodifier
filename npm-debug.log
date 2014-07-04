@@ -1,0 +1,45 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'update', '-g', 'bower' ]
+2 info using npm@1.4.16
+3 info using node@v0.10.29
+4 verbose request where is /bower
+5 verbose request registry https://registry.npmjs.org/
+6 verbose request id 745700cb2b83ae94
+7 verbose url raw /bower
+8 verbose url resolving [ 'https://registry.npmjs.org/', './bower' ]
+9 verbose url resolved https://registry.npmjs.org/bower
+10 verbose request where is https://registry.npmjs.org/bower
+11 info trying registry request attempt 1 at 16:07:31
+12 verbose etag "D1E7VQEI27H2N2JOHENR4O94W"
+13 http GET https://registry.npmjs.org/bower
+14 http 304 https://registry.npmjs.org/bower
+15 silly registry.get cb [ 304,
+15 silly registry.get   { date: 'Thu, 03 Jul 2014 14:07:32 GMT',
+15 silly registry.get     server: 'Apache',
+15 silly registry.get     via: '1.1 varnish',
+15 silly registry.get     'last-modified': 'Thu, 03 Jul 2014 14:07:07 GMT',
+15 silly registry.get     'cache-control': 'max-age=30',
+15 silly registry.get     etag: '"D1E7VQEI27H2N2JOHENR4O94W"',
+15 silly registry.get     'x-served-by': 'cache-fra1229-FRA',
+15 silly registry.get     'x-cache': 'HIT',
+15 silly registry.get     'x-cache-hits': '2',
+15 silly registry.get     'x-timer': 'S1404396452.424061,VS0,VE0',
+15 silly registry.get     vary: 'Accept',
+15 silly registry.get     'content-length': '0',
+15 silly registry.get     'keep-alive': 'timeout=10, max=50',
+15 silly registry.get     connection: 'Keep-Alive' } ]
+16 verbose etag https://registry.npmjs.org/bower from cache
+17 info outdated updating []
+18 error Error: EMFILE, readdir '/usr/local/lib/node_modules/ionic/node_modules/unzip/node_modules/binary/node_modules/chainsaw/node_modules/traverse'
+19 error If you need help, you may report this *entire* log,
+19 error including the npm and node versions, at:
+19 error     <http://github.com/npm/npm/issues>
+20 error System Darwin 13.2.0
+21 error command "node" "/usr/local/bin/npm" "update" "-g" "bower"
+22 error cwd /Users/hein/repos/famous/famous-sizemodifier
+23 error node -v v0.10.29
+24 error npm -v 1.4.16
+25 error path /usr/local/lib/node_modules/ionic/node_modules/unzip/node_modules/binary/node_modules/chainsaw/node_modules/traverse
+26 error code EMFILE
+27 error errno 20
+28 verbose exit [ 20, true ]
