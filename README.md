@@ -33,7 +33,7 @@ require.config({
 });
 ```
 
-Create a surface with a maximum-width of 400px, and a minimum-height of 100px:
+**Create a surface with a maximum-width of 400px, and a minimum-height of 100px:**
 
 ```javascript
 var SizeModifier = require('famous-sizemodifier');
@@ -46,7 +46,7 @@ var surface = new Surface({ properties: { backgroundColor: 'blue' }});
 this.add(sizeModifier).add(surface);
 ```
 
-Create a surface which is 50% its parent size:
+**Create a surface which is 50% its parent size:**
 
 *Note: this is different from Transform.scale, as it does not apply a scale-matrix, but it merely changes the size.*
 
@@ -58,7 +58,7 @@ var surface = new Surface({ properties: { backgroundColor: 'blue' }});
 this.add(sizeModifier).add(surface);
 ```
 
-Create a surface with an aspect ratio of 4/3:
+**Create a surface with an aspect ratio of 4/3:**
 
 ```javascript
 var sizeModifier = new SizeModifier({
