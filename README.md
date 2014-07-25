@@ -1,3 +1,7 @@
+## This project is deprecated and will no longer be maintained
+
+Instead, use the side-effect free SizeConstraint: https://github.com/IjzerenHein/famous-sizeconstraint
+
 famous-sizemodifier
 ==========
 
@@ -18,9 +22,9 @@ SizeModifier modifies the size of renderables based on the following options:
 ## Getting started
 
 Install using bower:
-	
+
 	bower install famous-sizemodifier
-	
+
 If necessary, add to the requirejs paths config:
 
 ```javascript
